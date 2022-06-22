@@ -1,0 +1,27 @@
+name: Mac Build CI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - README.md
+  pull_request:
+    paths-ignore:
+      - README.md
+
+jobs:
+  mac-build:
+    runs-on: macos-11
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PAT }}
+          submodules: recursive
+
+      - name: Build play-cpp-sdk library
+        run: cargo build --package play-cpp-sdk --release
+
+      - name: Build demo project
+        working-directory: demo
+        run: make build
